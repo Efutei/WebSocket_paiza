@@ -15,8 +15,6 @@ let movement = {};
 
 $(document).on('keydown keyup', (event) => {
     const KeyToCommand = {
-        'ArrowUp': 'forward',
-        'ArrowDown': 'back',
         'ArrowLeft': 'left',
         'ArrowRight': 'right',
     };
@@ -78,24 +76,19 @@ socket.on('state', function(players, bullets, walls) {
 const touches = {};
 $('#canvas-2d').on('touchstart', (event)=>{
     // console.log('touchstart', event, event.touches); 
-    socket.emit('shoot');
-    movement.forward = true;
-    Array.from(event.changedTouches).forEach((touch) => {
-        touches[touch.identifier] = {pageX: touch.pageX, pageY: touch.pageY};
-    });
-    event.preventDefault();
-    console.log('touches', touches, event.touches);
-});
-$('#canvas-2d').on('touchmove', (event)=>{
     movement.right = false;
     movement.left = false;
-    Array.from(event.touches).forEach((touch) => {
-        const startTouch = touches[touch.identifier];
-        movement.right |= touch.pageX - startTouch.pageX > 30;
-        movement.left |= touch.pageX - startTouch.pageX < -30;
+    Array.from(event.changedTouches).forEach((touch) => {
+        touches[touch.identifier] = {pageX: touch.pageX, pageY: touch.pageY};
+        movement.right |= touch.pageX > (window.parent.screen.width*2/3);
+        movement.left |= touch.pageX < (window.parent.screen.width/3);
+        if(touch.pageX > window.parent.screen.width/3 && touch.pageX < window.parent.screen.width*2/3){
+            socket.emit('shoot');
+        }
     });
     socket.emit('movement', movement);
     event.preventDefault();
+    console.log('touches', touches, event.touches);
 });
 $('#canvas-2d').on('touchend', (event)=>{
     Array.from(event.changedTouches).forEach((touch) => {

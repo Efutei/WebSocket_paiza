@@ -28,6 +28,18 @@ class GameObject{
         let collision = false;
         if(this.x < 0 || this.x + this.width >= FIELD_WIDTH || this.y < 0 || this.y + this.height >= FIELD_HEIGHT){
             collision = true;
+            if(this.x < 0){
+                this.x = 0;
+            }
+            if(this.x + this.width >= FIELD_WIDTH){
+                this.x = FIELD_WIDTH - this.width;
+            }
+            if(this.y < 0){
+                this.y = 0;
+            }
+            if(this.y + this.height >= FIELD_HEIGHT){
+                this.y = FIELD_HEIGHT - this.height;
+            }
         }
         if(this.intersectWalls()){
             collision = true;
@@ -172,12 +184,9 @@ io.on('connection', function(socket) {
 setInterval(() => {
     Object.values(players).forEach((player) => {
         const movement = player.movement;
-        if(movement.forward){
-            player.move(5+(player.point*0.1));
-        }
-        if(movement.back){
-            player.move(-5);
-        }
+        
+        player.move(5+(player.point*0.05));
+        
         if(movement.left){
             player.angle -= 0.1;
         }
