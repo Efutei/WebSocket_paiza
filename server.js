@@ -205,8 +205,8 @@ setInterval(() => {
                    player.damage();
                    bullet.remove();
                    bullet.player.point += 1;
-                   bullet.player.width += 3;
-                   bullet.player.height += 3;
+                   bullet.player.width += 1;
+                   bullet.player.height += 1;
                    if(player.health == 0){
                       bullet.player.health = 10;
                    }
